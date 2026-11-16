@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cherry Client — Minecraft 1.21.4 Fabric</title>
+<meta name="description" content="Cherry Client — красивый клиент для Minecraft 1.21.4 Fabric. Живое демо ClickGUI прямо в браузере, локальные аккаунты, конфиги и анимированный HUD.">
+<meta name="theme-color" content="#05060a">
+<link rel="icon" href="assets/favicon.ico">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/mainmenu.css">
+<link rel="stylesheet" href="css/clickgui.css">
+</head>
+<body>
+
+<!-- ================= PRELOADER ================= -->
+<div class="preloader" id="preloader">
+    <div class="preloader__logo"><img src="assets/logo.png" alt=""></div>
+    <div class="preloader__bar"><i></i></div>
+    <span class="preloader__text">cherry client</span>
+</div>
+
+<div class="scroll-bar" id="scrollBar"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- ================= NAV ================= -->
+<header class="nav" id="nav">
+    <div class="wrap nav__inner">
+        <a href="#top" class="nav__brand">
+            <img class="nav__logo" src="assets/logo.png" alt="Cherry Client">
+            <span class="nav__name">Cherry<span>.</span></span>
+        </a>
+
+        <nav class="nav__links" id="navLinks">
+            <a class="nav__link" href="#features">Возможности</a>
+            <a class="nav__link" href="#gui">ClickGUI</a>
+            <a class="nav__link" href="#hud">HUD</a>
+            <a class="nav__link" href="#download">Скачать</a>
+            <a class="nav__link" href="#faq">FAQ</a>
+        </nav>
+
+        <div class="nav__cta">
+            <a class="btn btn--primary btn--small" href="#download">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                Скачать
+            </a>
+            <button class="nav__icon-btn nav__burger" id="burger" aria-label="Меню">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div class="nav__mobile" id="navMobile">
+    <a href="#features">Возможности</a>
+    <a href="#gui">ClickGUI</a>
+    <a href="#hud">HUD</a>
+    <a href="#download">Скачать</a>
+    <a href="#faq">FAQ</a>
+</div>
+
+<main id="top">
+
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+        <div class="hero__bg" id="heroBg">
+            <div class="hero__img"></div>
+        </div>
+        <div class="hero__veil"></div>
+        <div class="hero__aurora"></div>
+        <canvas id="dust"></canvas>
+
+        <div class="wrap hero__content">
+            <div class="hero__badge reveal">
+                <span class="tag">1.21.4</span>
+                <b>Fabric</b>
+                <span>·</span>
+                <span>v3.0.14</span>
+            </div>
+
+            <h1 class="reveal" style="--d:.06s">
+                Cherry Client
+                <em>Красивый клиент для Minecraft, в который хочется залипнуть. Покликай его прямо здесь — без установки.</em>
+            </h1>
+
+            <div class="hero__actions reveal" style="--d:.12s">
+                <a class="btn btn--primary" href="#download">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                    Скачать лаунчер
+                </a>
+                <a class="btn btn--ghost" href="#gui" id="heroTry">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H4z"/><path d="M8 20h8M12 16v4"/><path d="M9 8l2 2-2 2M13 12h3"/></svg>
+                    Покликать ClickGUI
+                </a>
+            </div>
+
+            <div class="hero__meta reveal" style="--d:.18s">
+                <span><i></i>Windows 10 / 11</span>
+                <span><i></i>Java 21</span>
+                <span><i></i>~18 MB</span>
+                <span><i></i>Бесплатно</span>
+            </div>
+        </div>
+
+        <div class="hero__scroll">листай</div>
+    </section>
+
+    <!-- ================= MAIN MENU REPLICA ================= -->
+    <section class="showcase">
+        <div class="wrap">
+            <div class="showcase__frame" id="showcaseFrame">
+                <div class="showcase__glow"></div>
+                <div class="showcase__inner">
+                    <div class="mm" id="mainmenu">
+                        <div class="mm__stage" id="mmStage">
+                            <div class="mm__bg"></div>
+                            <div class="mm__veil"></div>
+                            <div class="mm__dust" id="mmDust"></div>
+
+                            <!-- ---------- MAIN ---------- -->
+                            <div class="mm__view is-active" data-view="main">
+                                <div class="mm__logo-glow" style="top:118px"></div>
+                                <img class="mm__logo" src="assets/logo.png" alt="" style="top:138px">
+
+                                <button class="mm__badge" id="mmBadge" style="top:176px">
+                                    <span id="mmBadgeName">Steve</span>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+                                </button>
+
+                                <div class="mm__title" style="top:205px">Cherry Client</div>
+                                <div class="mm__subtitle" id="mmSubtitle" style="top:238px">
+                                    Одиночная игра, сеть и настройки в одном меню
+                                </div>
+
+                                <button class="mm-btn" data-mm="singleplayer" style="left:356px;top:266px;width:120px;height:31px">
+                                    <img src="assets/icons/singleplayer_download.png" alt="">Одиночная
+                                </button>
+                                <button class="mm-btn" data-mm="multiplayer" style="left:484px;top:266px;width:120px;height:31px">
+                                    <img src="assets/icons/multiplayer_download.png" alt="">Сетевая
+                                </button>
+
+                                <button class="mm-btn mm-btn--icon" data-mm="accounts" style="left:408px;top:305px" title="Аккаунты">
+                                    <img src="assets/icons/profile.png" alt="">
+                                </button>
+                                <button class="mm-btn mm-btn--icon" data-mm="settings" style="left:446px;top:305px" title="Настройки">
+                                    <img src="assets/icons/settings.png" alt="">
+                                </button>
+                                <button class="mm-btn mm-btn--icon" data-mm="gui" style="left:484px;top:305px" title="Открыть ClickGUI">
+                                    <img src="assets/icons/sparkles.png" alt="">
+                                </button>
+                                <button class="mm-btn mm-btn--icon mm-btn--danger" data-mm="exit" style="left:522px;top:305px" title="Выход">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+                                </button>
+
+                                <div class="mm__footer">
+                                    cherry client v3.0.14
+                                    <span>Fabric 1.21.4 · не связан с Mojang AB</span>
+                                </div>
+                            </div>
+
+                            <!-- ---------- ACCOUNTS ---------- -->
+                            <div class="mm__view" data-view="accounts">
+                                <div class="mm__back" id="mmBack">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                                    Назад
+                                </div>
+
+                                <div class="mm__acc-title" style="top:60px">Аккаунты</div>
+                                <div class="mm__acc-sub" style="top:86px">Локальные профили — без Microsoft и паролей</div>
+
+                                <div class="mm__acc-section" style="top:120px">Новый аккаунт</div>
+
+                                <div class="mm-field" id="mmNickField" style="left:275px;top:140px;width:296px">
+                                    <span class="mm-field__ph" id="mmNickText">Введите ник…</span>
+                                    <span class="mm-field__caret" id="mmCaret" style="display:none"></span>
+                                </div>
+                                <button class="mm-sub-btn" id="mmRandom" style="left:577px;top:140px;width:36px;height:26px" title="Случайный ник">
+                                    <img src="assets/icons/zap.png" alt="">
+                                </button>
+                                <button class="mm-sub-btn" id="mmCreate" style="left:619px;top:140px;width:66px;height:26px">
+                                    <img src="assets/icons/add.png" alt="">Создать
+                                </button>
+
+                                <div class="mm__acc-section" style="top:182px">Мои аккаунты <span style="color:#64748b;font-weight:600" id="mmAccCount">3</span></div>
+
+                                <div class="mm-field mm-field--search" id="mmSearchField" style="left:275px;top:202px;width:410px">
+                                    <img src="assets/icons/search.png" alt="">
+                                    <span class="mm-field__ph" id="mmSearchText">Найти аккаунт…</span>
+                                </div>
+
+                                <div class="mm__grid" id="mmGrid">
+                                    <div class="mm__grid-inner" id="mmGridInner"></div>
+                                </div>
+                                <div class="mm__empty" id="mmEmpty" style="top:290px;display:none">
+                                    Ничего не найдено
+                                    <small>Попробуй другой запрос или создай новый профиль</small>
+                                </div>
+
+                                <button class="mm-login" id="mmLogin" style="top:432px">
+                                    Войти как <b id="mmLoginName">Steve</b>
+                                </button>
+
+                                <div style="position:absolute;left:275px;top:472px;width:410px;display:flex;gap:6px">
+                                    <button class="mm-sub-btn" id="mmDelete" style="position:relative;left:0;top:0;width:132px">
+                                        <img src="assets/icons/trash_preset.png" alt="">Удалить
+                                    </button>
+                                    <button class="mm-sub-btn" id="mmDeleteFound" style="position:relative;left:0;top:0;width:132px">
+                                        Удалить найденные
+                                    </button>
+                                    <button class="mm-sub-btn" id="mmFolder" style="position:relative;left:0;top:0;width:134px">
+                                        Открыть папку
+                                    </button>
+                                </div>
+
+                                <div class="mm-delall" style="top:508px" id="mmDeleteAll">Удалить все аккаунты</div>
+                            </div>
+
+                            <div class="mm__toast" id="mmToast"><i></i><span id="mmToastText">Готово</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chip-float chip-float--a"><i></i>аккаунты <b>offline</b></div>
+                <div class="chip-float chip-float--b"><b>Right Shift</b> ClickGUI</div>
+                <div class="chip-float chip-float--c"><b>960×540</b> 60 fps</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= MARQUEE ================= -->
+    <div class="marquee">
+        <div class="marquee__track" id="marqueeTrack">
+            <span class="marquee__item">ClickGUI</span>
+            <span class="marquee__item">HUD</span>
+            <span class="marquee__item">Configs</span>
+            <span class="marquee__item">Offline Accounts</span>
+            <span class="marquee__item">Fabric 1.21.4</span>
+            <span class="marquee__item">Module Settings</span>
+            <span class="marquee__item">No Microsoft</span>
+            <span class="marquee__item">Cherry Launcher</span>
+        </div>
+    </div>
+
+    <!-- ================= FEATURES ================= -->
+    <section class="section" id="features">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="eyebrow"><span class="eyebrow__dot"></span>что внутри</span>
+                <h2>Сделано так, чтобы <em>было приятно</em> пользоваться</h2>
+                <p>Не просто набор модулей: каждый экран, каждый ховер и каждый конфиг вылизаны так, будто это часть игры, а не сторонний мод.</p>
+            </div>
+
+            <div class="bento" id="bento">
+                <article class="card card--wide reveal">
+                    <div class="card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 4v16"/></svg>
+                    </div>
+                    <h3>ClickGUI, который не хочется закрывать</h3>
+                    <p>Своя сетка модулей, живой поиск, избранное, сортировка, компактный режим и раскрывающиеся настройки. Всё анимировано — открытие, смена категории, переключение тумблеров.</p>
+                    <div class="card__stat"><b>60</b><span>модулей с живыми настройками</span></div>
+                    <div class="card__visual"></div>
+                </article>
+
+                <article class="card card--third reveal" style="--d:.05s">
+                    <div class="card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.4"/></svg>
+                    </div>
+                    <h3>Живой HUD</h3>
+                    <p>ArrayList, watermark, target-hud и keystrokes — с плавными появлениями и акцентом под цвет клиента.</p>
+                </article>
+
+                <article class="card card--third reveal" style="--d:.1s">
+                    <div class="card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="2"/></svg>
+                    </div>
+                    <h3>Конфиги в один клик</h3>
+                    <p>Создание, загрузка, переименование и удаление прямо из GUI. Правый клик по конфигу — контекстное меню.</p>
+                </article>
+
+                <article class="card card--third reveal" style="--d:.15s">
+                    <div class="card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0"/></svg>
+                    </div>
+                    <h3>Аккаунты без Microsoft</h3>
+                    <p>Локальные профили, случайный ник, поиск, избранное и быстрое переключение — пароли не нужны.</p>
+                </article>
+
+                <article class="card card--third reveal" style="--d:.2s">
+                    <div class="card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4a3 3 0 0 0 3 3 3 3 0 0 0 3-3V3"/><path d="M15 13v4a4 4 0 0 1-8 0v-2"/><circle cx="7" cy="15" r="2"/></svg>
+                    </div>
+                    <h3>Совместимость</h3>
+                    <p>Обычный Fabric-мод: дружит с оптимизациями и не ломает другие моды.</p>
+                    <div class="stack-chips">
+                        <span>Fabric</span><span>Sodium</span><span>Lithium</span><span>Iris</span><span>Java 21</span>
+                    </div>
+                </article>
+
+                <article class="card card--half reveal">
+                    <div class="card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13H11l-1 9 8.5-11H12l1-9z"/></svg>
+                    </div>
+                    <h3>Модули, которые реально работают</h3>
+                    <p>Combat, Movement, Render, Player и Misc — с настройками, слайдерами, режимами и биндами. Никаких кнопок-пустышек.</p>
+                    <ul class="card__list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>Слайдеры, режимы, мульти-выбор</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>Бинды прямо в карточке модуля</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>Избранное и быстрый поиск</li>
+                    </ul>
+                </article>
+
+                <article class="card card--half card--accent reveal" style="--d:.05s">
+                    <div class="card__icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg>
+                    </div>
+                    <h3>Без сюрпризов</h3>
+                    <p>Клиент не просит пароль от Microsoft, не лезет в систему и не ставит ничего в автозагрузку без спроса.</p>
+                    <ul class="card__list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>Только Fabric-мод и лаунчер</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>Оффлайн-ники и локальные конфиги</li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= CLICKGUI DEMO ================= -->
+    <section class="section gui-section" id="gui">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="eyebrow"><span class="eyebrow__dot"></span>живое демо</span>
+                <h2>Это не скриншот. <em>Потыкай.</em></h2>
+                <p>Настоящий ClickGUI Cherry, пересобранный на HTML/CSS. Переключай модули, тяни слайдеры, открывай дропдауны, меняй акцент и тему.</p>
+            </div>
+
+            <div class="gui-toolbar reveal">
+                <div class="gui-toolbar__group">
+                    <span class="gui-toolbar__label">Масштаб</span>
+                    <button class="tool-btn" id="zoomOut" aria-label="Уменьшить">−</button>
+                    <button class="tool-btn" id="zoomValue" style="min-width:52px;justify-content:center">100%</button>
+                    <button class="tool-btn" id="zoomIn" aria-label="Увеличить">+</button>
+                </div>
+
+                <div class="gui-toolbar__group">
+                    <span class="gui-toolbar__label">Акцент</span>
+                    <button class="swatch is-active" data-accent="#38bdf8" style="background:#38bdf8" aria-label="Sky"></button>
+                    <button class="swatch" data-accent="#ff3d6e" style="background:#ff3d6e" aria-label="Cherry"></button>
+                    <button class="swatch" data-accent="#8b5cf6" style="background:#8b5cf6" aria-label="Violet"></button>
+                    <button class="swatch" data-accent="#4ade80" style="background:#4ade80" aria-label="Mint"></button>
+                    <button class="swatch" data-accent="#f5b544" style="background:#f5b544" aria-label="Amber"></button>
+                </div>
+
+                <div class="gui-toolbar__group">
+                    <span class="gui-toolbar__label">Тема</span>
+                    <button class="tool-btn is-active" id="themeDark">Тёмная</button>
+                    <button class="tool-btn" id="themeLight">Светлая</button>
+                </div>
+
+                <div class="gui-toolbar__hint">
+                    <span><kbd>ЛКМ</kbd> переключить</span>
+                    <span><kbd>колесо</kbd> скролл</span>
+                </div>
+            </div>
+
+            <div class="gui-stage reveal" id="guiStageWrap">
+                <div class="cg" id="clickgui">
+                    <div class="cg__pan" id="cgPan">
+                        <div class="cg__space" id="cgSpace">
+                            <div class="cg__stage" id="cgStage">
+                                <div class="cg__panel" id="cgPanel">
+                                    <div class="cg__sheen"></div>
+
+                                    <aside class="cg__side">
+                                        <div class="cg__brand">
+                                            <span class="cg__logo"><img src="assets/logo.png" alt=""></span>
+                                            <span class="cg__brand-name">Cherry<small>CLIENT</small></span>
+                                        </div>
+                                        <div class="cg__rule"></div>
+                                        <div class="cg__side-label" style="top:74px">Категории</div>
+                                        <div class="cg__cats" id="cgCats"></div>
+                                        <div class="cg__side-label" style="top:276px">Действия</div>
+                                        <div class="cg__quick" id="cgQuick"></div>
+
+                                        <button class="cg__configs" id="cgConfigs">
+                                            <span class="cg__configs-icon">
+                                                <i></i><i></i>
+                                            </span>
+                                            <span class="cg__configs-meta">
+                                                <b>Configs</b>
+                                                <small id="cgConfigName">default.cherry</small>
+                                            </span>
+                                            <svg class="cg__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 6l6 6-6 6"/></svg>
+                                        </button>
+
+                                        <div class="cg__hints">
+                                            Правый клик по модулю — настройки<br>
+                                            Правый клик по конфигу — действия
+                                        </div>
+
+                                        <div class="cg__side-label" style="top:614px">Поиск</div>
+                                        <label class="cg__search" id="cgSearchWrap">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+                                            <input id="cgSearch" type="text" placeholder="Название модуля…" autocomplete="off" spellcheck="false">
+                                            <button class="cg__search-clear" id="cgSearchClear" aria-label="Очистить">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                                            </button>
+                                        </label>
+                                        <div class="cg__sig">cherry client</div>
+                                    </aside>
+
+                                    <header class="cg__top">
+                                        <div class="cg__top-tile" id="cgTopIcon"></div>
+                                        <div class="cg__top-title" id="cgTopTitle">Combat</div>
+                                        <div class="cg__top-count" id="cgTopCount">0 модулей</div>
+                                        <div class="cg__top-actions" id="cgTopActions"></div>
+                                    </header>
+
+                                    <main class="cg__content" id="cgContent">
+                                        <div class="cg__grid" id="cgGrid"></div>
+                                        <div class="cg__empty" id="cgEmpty">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+                                            <b>Ничего не найдено</b>
+                                            <span>Попробуй другой запрос или сбрось фильтры</span>
+                                        </div>
+                                    </main>
+
+                                    <div class="cg__popups" id="cgPopups"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gui-stage__hint">
+                    <span><kbd>ЛКМ</kbd> тумблер / раскрыть настройки</span>
+                    <span><kbd>ПКМ</kbd> по карточке — контекст</span>
+                    <span><kbd>звёздочка</kbd> избранное</span>
+                    <span><kbd>поиск</kbd> фильтр по всем категориям</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= HUD ================= -->
+    <section class="section" id="hud">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="eyebrow"><span class="eyebrow__dot"></span>в игре</span>
+                <h2>Интерфейс, который <em>не мешает</em></h2>
+                <p>HUD собран из тех же материалов, что и меню: тёмное стекло, тонкие границы и один акцентный цвет. Нажми на клавиши в превью.</p>
+            </div>
+
+            <div class="hud-grid">
+                <div class="hud-card hud-card--screen reveal">
+                    <div class="hud-canvas"></div>
+
+                    <ul class="hud-arraylist" id="hudList">
+                        <li style="animation-delay:.05s">KillAura</li>
+                        <li style="animation-delay:.12s">Speed</li>
+                        <li style="animation-delay:.19s">ESP</li>
+                        <li style="animation-delay:.26s">NoFall</li>
+                        <li style="animation-delay:.33s">ChestStealer</li>
+                    </ul>
+
+                    <div class="hud-watermark">
+                        <img src="assets/logo.png" alt="">
+                        <span>cherry</span> <b>3.0.14</b>
+                    </div>
+
+                    <div class="hud-target">
+                        <div class="hud-target__row"><span>Target</span><span>Steve</span></div>
+                        <div class="hud-target__bar"><i></i></div>
+                        <div class="hud-target__row" style="margin-top:7px"><span>20.0 HP</span><span>18.4</span></div>
+                    </div>
+
+                    <div class="hud-keys" id="hudKeys">
+                        <span data-key="w">W</span>
+                        <span data-key="a">A</span>
+                        <span data-key="s">S</span>
+                        <span data-key="d">D</span>
+                    </div>
+                </div>
+
+                <div style="display:grid;gap:16px">
+                    <div class="card reveal" style="--d:.06s">
+                        <div class="card__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l4-6 3 3 4-7 3 4 4-3"/></svg>
+                        </div>
+                        <h3>Ничего лишнего</h3>
+                        <p>Модули в ArrayList сортируются по длине, акцентная полоска справа, появление с задержкой — читается с одного взгляда.</p>
+                    </div>
+                    <div class="card reveal" style="--d:.12s">
+                        <div class="card__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="7" width="19" height="11" rx="2.5"/><path d="M6 11h2M7 10v2M15 11h3"/></svg>
+                        </div>
+                        <h3>Keystrokes</h3>
+                        <p>Клавиши подсвечиваются в реальном времени. Здесь можно потыкать W A S D прямо на странице — попробуй.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= DOWNLOAD ================= -->
+    <section class="section" id="download">
+        <div class="wrap">
+            <div class="section-head reveal">
+                <span class="eyebrow"><span class="eyebrow__dot"></span>установка</span>
+                <h2>Скачать <em>Cherry Client</em></h2>
+                <p>Лаунчер ставит Fabric и мод сам. Нужны Windows 10/11 и Java 21 — WebView2 и .NET 8 на современных Windows уже есть. Лицензия Minecraft не требуется.</p>
+            </div>
+
+            <div class="download-grid">
+                <div class="download-main reveal">
+                    <div>
+                        <h3>Cherry Launcher</h3>
+                        <p>Один exe: скачивает нужную версию, ставит Fabric, кладёт мод в <span class="mono">mods</span> и запускает игру.</p>
+                    </div>
+
+                    <div class="file-card">
+                        <div class="file-card__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7l2 3h7v13H4z"/><path d="M12 11v6M9.5 14.5L12 17l2.5-2.5"/></svg>
+                        </div>
+                        <div class="file-card__meta">
+                            <b>CherryLauncher.exe</b>
+                            <span>Windows · WebView2 · ~18 MB</span>
+                        </div>
+                        <a class="file-card__action" href="#" id="dlLauncherIcon" aria-label="Скачать лаунчер">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+                        </a>
+                    </div>
+
+                    <div class="file-card">
+                        <div class="file-card__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7.5v9l-8 4.5-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>
+                        </div>
+                        <div class="file-card__meta">
+                            <b>cherry-client.jar</b>
+                            <span>Fabric 1.21.4 · ~13 MB</span>
+                        </div>
+                        <a class="file-card__action" href="#" id="dlJarIcon" aria-label="Скачать jar">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+                        </a>
+                    </div>
+
+                    <div class="download-actions">
+                        <a class="btn btn--primary" href="#" id="dlLauncher">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                            Скачать лаунчер
+                        </a>
+                        <a class="btn btn--ghost" href="#" id="dlJar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 21h16"/></svg>
+                            Только .jar
+                        </a>
+                    </div>
+
+                    <div class="download-note">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+                        <span>Пока билд не залит на файлхостинг, ссылки — заглушки. Замени их в <span class="mono">js/config.js</span> одной строкой.</span>
+                    </div>
+                </div>
+
+                <div class="steps reveal" style="--d:.06s">
+                    <div class="step">
+                        <span class="step__num">01</span>
+                        <div>
+                            <h4>Скачай лаунчер</h4>
+                            <p>Файл <code>CherryLauncher.exe</code>. SmartScreen может спросить подтверждение — «Подробнее» → «Выполнить всё равно».</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step__num">02</span>
+                        <div>
+                            <h4>Запусти и подожди</h4>
+                            <p>Лаунчер сам скачает Fabric 1.21.4, Java-компоненты и положит <code>cherry-client.jar</code> в <code>mods</code>.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step__num">03</span>
+                        <div>
+                            <h4>Введи ник</h4>
+                            <p>Лицензия не нужна. Ник — 3–16 символов, латиница и цифры. Профиль сохранится локально.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <span class="step__num">04</span>
+                        <div>
+                            <h4>Заходи в игру</h4>
+                            <p>Нажми «Играть». В игре <code>Right Shift</code> открывает ClickGUI, а меню клиента — новая кнопка в главном меню.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= FAQ ================= -->
+    <section class="section" id="faq">
+        <div class="wrap faq">
+            <div class="reveal">
+                <div class="section-head" style="margin-bottom:22px">
+                    <span class="eyebrow"><span class="eyebrow__dot"></span>вопросы</span>
+                    <h2>Коротко <em>о главном</em></h2>
+                </div>
+                <p class="muted" style="font-size:14.5px;max-width:30ch">Не нашёл ответ? Напиши в Discord — ссылка в подвале.</p>
+            </div>
+
+            <div class="faq__list reveal">
+                <details class="faq__item" open>
+                    <summary>Это бесплатно?<span class="faq__plus"></span></summary>
+                    <div class="faq__body">Да. Клиент, лаунчер и все модули бесплатны. Никаких подписок, ключей и «премиум-версий».</div>
+                </details>
+                <details class="faq__item">
+                    <summary>Нужна ли лицензия Minecraft?<span class="faq__plus"></span></summary>
+                    <div class="faq__body">Нет. Аккаунты локальные (offline), вход по нику. Клиент не просит пароль Microsoft и не отправляет его никуда.</div>
+                </details>
+                <details class="faq__item">
+                    <summary>Какая версия игры поддерживается?<span class="faq__plus"></span></summary>
+                    <div class="faq__body">Minecraft 1.21.4 на Fabric. Лаунчер сам подбирает и ставит нужную версию Fabric Loader и Java 21, если её нет.</div>
+                </details>
+                <details class="faq__item">
+                    <summary>Можно ставить другие моды?<span class="faq__plus"></span></summary>
+                    <div class="faq__body">Да, <span class="mono">cherry-client.jar</span> — обычный Fabric-мод. Кидай его в <span class="mono">mods</span> рядом с остальными, конфликтов с оптимизациями (Sodium, Lithium) нет.</div>
+                </details>
+                <details class="faq__item">
+                    <summary>Почему сайт выглядит как игра?<span class="faq__plus"></span></summary>
+                    <div class="faq__body">Потому что меню и ClickGUI здесь — интерактивные копии настоящего интерфейса, собранные из тех же размеров и цветов. Можно потыкать до скачивания.</div>
+                </details>
+                <details class="faq__item">
+                    <summary>Куда кидать конфиги?<span class="faq__plus"></span></summary>
+                    <div class="faq__body">Папка <span class="mono">.minecraft/cherry/configs</span>. Файлы <span class="mono">.cherry</span> появляются в меню Configs автоматически.</div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= CTA ================= -->
+    <section class="section section--tight">
+        <div class="wrap">
+            <div class="cta-band reveal">
+                <div class="cta-band__orb cta-band__orb--a"></div>
+                <div class="cta-band__orb cta-band__orb--b"></div>
+                <span class="eyebrow"><span class="eyebrow__dot"></span>погнали</span>
+                <h2>Готов почувствовать разницу?</h2>
+                <p>Скачай лаунчер, зайди с любым ником и открой ClickGUI. На всё — меньше минуты.</p>
+                <a class="btn btn--primary" href="#download">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+                    Скачать Cherry Client
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <div class="wrap">
+        <div class="footer__top">
+            <div class="footer__brand">
+                <a href="#top" class="nav__brand">
+                    <img class="nav__logo" src="assets/logo.png" alt="">
+                    <span class="nav__name">Cherry<span>.</span></span>
+                </a>
+                <p>Красивый клиент для Minecraft 1.21.4 на Fabric. Сделан для людей, а не для скриншотов.</p>
+            </div>
+
+            <div class="footer__cols">
+                <div class="footer__col">
+                    <h4>Клиент</h4>
+                    <a href="#features">Возможности</a>
+                    <a href="#gui">ClickGUI</a>
+                    <a href="#hud">HUD</a>
+                    <a href="#download">Скачать</a>
+                </div>
+                <div class="footer__col">
+                    <h4>Ссылки</h4>
+                    <a href="#" data-ext="discord">Discord</a>
+                    <a href="#" data-ext="github">GitHub</a>
+                    <a href="#" data-ext="changelog">Changelog</a>
+                </div>
+                <div class="footer__col">
+                    <h4>Документы</h4>
+                    <a href="#faq">FAQ</a>
+                    <a href="#" data-ext="terms">Условия</a>
+                    <a href="#" data-ext="privacy">Приватность</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer__bottom">
+            <span>© <span id="year">2026</span> Cherry Client. Не связан с Mojang AB или Microsoft.</span>
+            <span><i class="dot-live"></i><span id="footVersion">v3.0.14</span> · Fabric 1.21.4</span>
+            <span class="mono">сделано с 🍒</span>
+        </div>
+    </div>
+</footer>
+
+<div class="toasts" id="toasts"></div>
+
+<script src="js/config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/mainmenu.js"></script>
+<script src="js/clickgui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
